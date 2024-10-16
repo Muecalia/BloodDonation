@@ -32,6 +32,9 @@ namespace BloodDonation.Application.Validators.Donors
             RuleFor(d => d.Cep)
                 .NotEmpty().WithMessage("Informe um CEP válido");
 
+            RuleFor(d => d.Weight)
+                .GreaterThanOrEqualTo(50).WithMessage("O peso não pode estar abaixo de 50KG");
+
             RuleFor(d => d.DateOfBirth)
                 .NotEmpty().WithMessage("Informe a data de nascimento")
                 .Must(GeneralService.IsValidDateOfBirth).WithMessage("Data de nascimento inválida ou o doador deve ter pelo menos 15 anos");

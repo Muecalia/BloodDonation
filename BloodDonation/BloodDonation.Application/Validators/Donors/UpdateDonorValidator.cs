@@ -32,6 +32,9 @@ namespace BloodDonation.Application.Validators.Donors
             RuleFor(d => d.FactorRh)
                 .NotEmpty().WithMessage("Informe o Factor de Rh");
 
+            RuleFor(d => d.Weight)
+                .GreaterThanOrEqualTo(50).WithMessage("O peso não pode estar abaixo de 50KG");
+
             RuleFor(d => d.Cep)
                 .NotEmpty().WithMessage("Informe um CEP válido");
 
