@@ -1,4 +1,4 @@
-﻿namespace BloodDonation.Application.Queries.Response.Addresses
+﻿namespace BloodDonation.Application.Queries.Response.Donors
 {
     public class FindAddressResponse
     {

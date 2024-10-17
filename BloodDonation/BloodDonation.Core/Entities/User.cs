@@ -2,10 +2,11 @@
 
 namespace BloodDonation.Core.Entities
 {
-    public class Employee : BaseEntity
+    public class User : BaseEntity
     {
-        public Employee() 
+        public User() 
         {
+            Donors = [];
             Donations = [];
         }
 
@@ -16,9 +17,9 @@ namespace BloodDonation.Core.Entities
         [MaxLength(20)]
         public required string Phone { get; set; }
         [MaxLength(200)]
-        public required string Password { get; set; }        
-        public required int IdProfile { get; set; }
-        public required Profile Profile { get; set; }
+        public required string Password { get; set; }
+        public required string Role { get; set; }
+        public List<Donor> Donors { get; set; }
         public List<Donation> Donations { get; set; }
     }
 }

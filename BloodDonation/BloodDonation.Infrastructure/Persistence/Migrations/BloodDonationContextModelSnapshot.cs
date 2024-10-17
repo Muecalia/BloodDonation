@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BloodDonation.Infrastructure.PErsistence.Migrations
+namespace BloodDonation.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(BloodDonationContext))]
     partial class BloodDonationContextModelSnapshot : ModelSnapshot
@@ -119,7 +119,7 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                     b.Property<int>("IdDonor")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdEmployee")
+                    b.Property<int>("IdUser")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
@@ -135,7 +135,7 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
 
                     b.HasIndex("IdDonor");
 
-                    b.HasIndex("IdEmployee");
+                    b.HasIndex("IdUser");
 
                     b.ToTable("Donations");
                 });
@@ -179,6 +179,9 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                     b.Property<int>("IdAddress")
                         .HasColumnType("int");
 
+                    b.Property<int>("IdUser")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -205,12 +208,14 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                     b.HasIndex("IdAddress")
                         .IsUnique();
 
+                    b.HasIndex("IdUser");
+
                     b.HasIndex("Name");
 
                     b.ToTable("Donors");
                 });
 
-            modelBuilder.Entity("BloodDonation.Core.Entities.Employee", b =>
+            modelBuilder.Entity("BloodDonation.Core.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -228,9 +233,6 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("IdProfile")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -250,6 +252,10 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -259,45 +265,7 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("Employees");
-                });
-
-            modelBuilder.Entity("BloodDonation.Core.Entities.Profile", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<int>("ProfileId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name");
-
-                    b.HasIndex("ProfileId")
-                        .IsUnique();
-
-                    b.ToTable("Profile");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("BloodDonation.Core.Entities.Donation", b =>
@@ -308,15 +276,15 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BloodDonation.Core.Entities.Employee", "Employee")
+                    b.HasOne("BloodDonation.Core.Entities.User", "User")
                         .WithMany("Donations")
-                        .HasForeignKey("IdEmployee")
+                        .HasForeignKey("IdUser")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Donor");
 
-                    b.Navigation("Employee");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BloodDonation.Core.Entities.Donor", b =>
@@ -327,16 +295,15 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("BloodDonation.Core.Entities.Profile", b =>
-                {
-                    b.HasOne("BloodDonation.Core.Entities.Employee", null)
-                        .WithOne("Profile")
-                        .HasForeignKey("BloodDonation.Core.Entities.Profile", "ProfileId")
+                    b.HasOne("BloodDonation.Core.Entities.User", "User")
+                        .WithMany("Donors")
+                        .HasForeignKey("IdUser")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Address");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BloodDonation.Core.Entities.Address", b =>
@@ -349,12 +316,11 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                     b.Navigation("Donations");
                 });
 
-            modelBuilder.Entity("BloodDonation.Core.Entities.Employee", b =>
+            modelBuilder.Entity("BloodDonation.Core.Entities.User", b =>
                 {
                     b.Navigation("Donations");
 
-                    b.Navigation("Profile")
-                        .IsRequired();
+                    b.Navigation("Donors");
                 });
 #pragma warning restore 612, 618
         }

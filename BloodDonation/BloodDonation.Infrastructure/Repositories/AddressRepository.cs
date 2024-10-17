@@ -1,5 +1,5 @@
 ﻿using BloodDonation.Core.Entities;
-using BloodDonation.Infrastructure.Interfaces;
+using BloodDonation.Core.Repositories;
 using BloodDonation.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 

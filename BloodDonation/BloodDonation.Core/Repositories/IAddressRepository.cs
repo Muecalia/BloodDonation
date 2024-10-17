@@ -1,6 +1,6 @@
 ﻿using BloodDonation.Core.Entities;
 
-namespace BloodDonation.Infrastructure.Interfaces
+namespace BloodDonation.Core.Repositories
 {
     public interface IAddressRepository
     {

@@ -2,7 +2,7 @@
 using BloodDonation.Application.Commands.Response.Donors;
 using BloodDonation.Application.Utils;
 using BloodDonation.Application.Wrappers;
-using BloodDonation.Infrastructure.Interfaces;
+using BloodDonation.Core.Repositories;
 using MediatR;
 
 namespace BloodDonation.Application.Handlers.Donors
@@ -31,14 +31,7 @@ namespace BloodDonation.Application.Handlers.Donors
                 
                 await _iDonorRepository.Delete(donor, cancellationToken);
 
-                var result = new InputDonorResponse
-                {
-                    Id = donor.Id,
-                    Name = donor.Name,
-                    Email = donor.Email,
-                    Phone = donor.Phone,
-                    DataOperacao = donor.DeletedAt?.ToShortDateString()
-                };
+                var result = new InputDonorResponse(donor.Id, donor.Name, donor.Email, donor.Phone);
                 return ApiResponse<InputDonorResponse>.Success(result, MensagemError.OperacaoSucesso(ENTIDADE, OPERACAO));
             }
             catch (Exception ex)

@@ -35,6 +35,9 @@ namespace BloodDonation.Application.Validators.Donors
             RuleFor(d => d.Weight)
                 .GreaterThanOrEqualTo(50).WithMessage("O peso não pode estar abaixo de 50KG");
 
+            RuleFor(d => d.IdUser)
+                .GreaterThan(0).WithMessage("Informe um utilizador válido");
+
             RuleFor(d => d.Cep)
                 .NotEmpty().WithMessage("Informe um CEP válido");
 

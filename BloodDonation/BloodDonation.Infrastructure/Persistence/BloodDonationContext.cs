@@ -11,17 +11,10 @@ namespace BloodDonation.Infrastructure.Persistence
         public DbSet<BloodStock> BloodStocks { get; set; }
         public DbSet<Donation> Donations { get; set; }
         public DbSet<Donor> Donors { get; set; }
-        public DbSet<Employee> Employees { get; set; }
-        public DbSet<Profile> Profile { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Profile>(e => 
-            {
-                e.HasKey(p => p.Id);
-                e.HasIndex(p => p.Name);
-            });
-
             builder.Entity<Address>(e =>
             {
                 e.HasKey(a => a.Id);
@@ -41,16 +34,16 @@ namespace BloodDonation.Infrastructure.Persistence
             {
                 e.HasKey(d => d.Id);
                 e.HasIndex(d => d.IdDonor);
-                e.HasIndex(d => d.IdEmployee);
+                e.HasIndex(d => d.IdUser);
 
                 e.HasOne(d => d.Donor)
                     .WithMany(d => d.Donations)
                     .HasForeignKey(d => d.IdDonor)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                e.HasOne(e => e.Employee)
+                e.HasOne(e => e.User)
                     .WithMany(e => e.Donations)
-                    .HasForeignKey (e => e.IdEmployee)
+                    .HasForeignKey (e => e.IdUser)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
@@ -65,27 +58,31 @@ namespace BloodDonation.Infrastructure.Persistence
                     .HasForeignKey<Donor>(d => d.IdAddress)
                     .OnDelete(DeleteBehavior.Restrict);
 
+                e.HasOne(d => d.User)
+                    .WithMany(d => d.Donors)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.Restrict);
+
                 e.HasMany(d => d.Donations)
                     .WithOne(d => d.Donor)
                     .HasForeignKey(d => d.IdDonor)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
-            builder.Entity<Employee>(e => 
+            builder.Entity<User>(e => 
             {
-                e.HasKey(e => e.Id);
-                e.HasIndex(e => e.Name);
-                e.HasIndex(e => e.Email);
-
-                e.HasOne(p => p.Profile)
-                    .WithOne()
-                    .HasForeignKey<Profile>("ProfileId")
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .IsRequired();
+                e.HasKey(u => u.Id);
+                e.HasIndex(u => u.Name);
+                e.HasIndex(u => u.Email);
 
                 e.HasMany(d => d.Donations)
-                    .WithOne(e => e.Employee)
-                    .HasForeignKey(e => e.IdEmployee)
+                    .WithOne(e => e.User)
+                    .HasForeignKey(e => e.IdUser)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasMany(u => u.Donors)
+                    .WithOne(d => d.User)
+                    .HasForeignKey(e => e.IdUser)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 

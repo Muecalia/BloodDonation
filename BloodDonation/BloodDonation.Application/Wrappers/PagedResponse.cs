@@ -2,11 +2,12 @@
 {
     public class PagedResponse<T> : ApiResponse<T>
     {
+        public List<T> Datas { get; init; }
         public int PageNumber { get; init; }
         public int PageSize { get; init; }
         public int TotalRecords { get; init; }
         public int TotalPages { get; init; }
-        public List<T> Datas { get; init; }
+        
         //public bool HasPreviousPage => PageIndex > 1;
         //public bool HasNextPage => PageSize < TotalPages;
 

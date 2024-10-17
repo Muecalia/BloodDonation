@@ -16,5 +16,6 @@ namespace BloodDonation.Application.Commands.Request.Donors
         public string BloodType { get; set; } = string.Empty;
         public double Weight { get; set; } = 2f;
         public string Cep { get; set; } = string.Empty;
+        public int IdUser { get; set; } = 0;
     }
 }
