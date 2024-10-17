@@ -1,6 +1,4 @@
-﻿using BloodDonation.Application.Queries.Response.Addresses;
-
-namespace BloodDonation.Application.Queries.Response.Donors
+﻿namespace BloodDonation.Application.Queries.Response.Donors
 {
     public class FindDonorByIdResponse
     {

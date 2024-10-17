@@ -2,7 +2,7 @@
 using BloodDonation.Application.Queries.Response.Donors;
 using BloodDonation.Application.Utils;
 using BloodDonation.Application.Wrappers;
-using BloodDonation.Infrastructure.Interfaces;
+using BloodDonation.Core.Repositories;
 using MediatR;
 
 namespace BloodDonation.Application.Handlers.Donors

@@ -27,6 +27,8 @@ namespace BloodDonation.Core.Entities
         public required int IdAddress { get; set; }
         [Required]
         public required Address Address { get; set; }
+        public required int IdUser { get; set; }
+        public required User User { get; set; }
         public List<Donation> Donations { get; set; }
     }
 }

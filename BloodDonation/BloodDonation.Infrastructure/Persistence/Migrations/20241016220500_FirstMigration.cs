@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BloodDonation.Infrastructure.PErsistence.Migrations
+namespace BloodDonation.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
     public partial class FirstMigration : Migration
@@ -51,7 +51,7 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Employees",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -60,7 +60,7 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    IdProfile = table.Column<int>(type: "int", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -68,7 +68,7 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Employees", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -86,6 +86,7 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                     BloodType = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
                     Weight = table.Column<double>(type: "float", nullable: false),
                     IdAddress = table.Column<int>(type: "int", nullable: false),
+                    IdUser = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -100,28 +101,10 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                         principalTable: "Addresses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Profile",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    ProfileId = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Profile", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Profile_Employees_ProfileId",
-                        column: x => x.ProfileId,
-                        principalTable: "Employees",
+                        name: "FK_Donors_Users_IdUser",
+                        column: x => x.IdUser,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -134,7 +117,7 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     QtdMl = table.Column<int>(type: "int", nullable: false),
                     IdDonor = table.Column<int>(type: "int", nullable: false),
-                    IdEmployee = table.Column<int>(type: "int", nullable: false),
+                    IdUser = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -150,9 +133,9 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Donations_Employees_IdEmployee",
-                        column: x => x.IdEmployee,
-                        principalTable: "Employees",
+                        name: "FK_Donations_Users_IdUser",
+                        column: x => x.IdUser,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -163,9 +146,9 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                 column: "IdDonor");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Donations_IdEmployee",
+                name: "IX_Donations_IdUser",
                 table: "Donations",
-                column: "IdEmployee");
+                column: "IdUser");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Donors_Email",
@@ -179,30 +162,24 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Donors_IdUser",
+                table: "Donors",
+                column: "IdUser");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Donors_Name",
                 table: "Donors",
                 column: "Name");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Employees_Email",
-                table: "Employees",
+                name: "IX_Users_Email",
+                table: "Users",
                 column: "Email");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Employees_Name",
-                table: "Employees",
+                name: "IX_Users_Name",
+                table: "Users",
                 column: "Name");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Profile_Name",
-                table: "Profile",
-                column: "Name");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Profile_ProfileId",
-                table: "Profile",
-                column: "ProfileId",
-                unique: true);
         }
 
         /// <inheritdoc />
@@ -215,16 +192,13 @@ namespace BloodDonation.Infrastructure.PErsistence.Migrations
                 name: "Donations");
 
             migrationBuilder.DropTable(
-                name: "Profile");
-
-            migrationBuilder.DropTable(
                 name: "Donors");
 
             migrationBuilder.DropTable(
-                name: "Employees");
+                name: "Addresses");
 
             migrationBuilder.DropTable(
-                name: "Addresses");
+                name: "Users");
         }
     }
 }
